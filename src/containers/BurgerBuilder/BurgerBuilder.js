@@ -5,7 +5,7 @@ import BuildControls from '../../components/BuildControlls/BuildControls';
 
 const INGRDIENT_PRIZES = {
   salad:0.5,
-  cheese:0.4,
+  chease:0.4,
   meat:1.3,
   bacon:0.7
 }
@@ -19,7 +19,20 @@ class BurgerBuilder extends Component{
          chease:0,
          meat:0
        },
-       totalPrize :4
+       totalPrize :4,
+       purchasable:false
+  }
+
+  updatePurchaseState = (ingredients)=> {
+
+          const sum =  Object.keys(ingredients)
+                  .map( igKey => {return ingredients[igKey] ;} )
+                  .reduce(
+                    ( sum , el ) => {return sum + el ;}, 0
+                  );
+                  alert(sum);
+                  this.setState({purchasable: sum >0 });
+                  alert(JSON.stringify(this.state.ingredients));
   }
 
   addIngredientHandler = (type) => {
@@ -34,6 +47,7 @@ class BurgerBuilder extends Component{
             const newPrize =  oldPrize+incrementPrize;
 
             this.setState({ingredients:newIng , totalPrize:newPrize});
+            this.updatePurchaseState(newIng);
 
   }
 
@@ -52,6 +66,8 @@ class BurgerBuilder extends Component{
             const newPrice = oldPrice-decrementPrice;
 
             this.setState({ingredients:newIng, totalPrize:newPrice});
+            this.updatePurchaseState(newIng);
+
 
   }
 
@@ -72,6 +88,8 @@ class BurgerBuilder extends Component{
                     ingredientAdded={this.addIngredientHandler}
                     ingredientRemoved={this.removeIngredientHandler}
                     disabled = {disabledInfo}
+                    purchasable={this.state.purchasable}
+                    prize={this.state.totalPrize}
             />
       </Aux>
     );
